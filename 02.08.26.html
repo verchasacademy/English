@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Verchas Academy - English Tenses (Part 2)</title>
+    <title>Verchas Academy - English Tenses (Part 1)</title>
     <style>
         :root {
             --primary: #1a237e; 
@@ -227,7 +227,7 @@
             <img src="verchas-logo.webp" alt="Verchas Academy Logo" id="logo">
             <h1>Verchas Academy, Ayodhya</h1>
         </div>
-        <h2>Interactive English Tenses Worksheet: 9th & 10th Foundation (Part 2)</h2>
+        <h2>Interactive English Tenses Worksheet: 9th & 10th Foundation (Part 1)</h2>
     </header>
 
     <div class="container">
@@ -271,31 +271,31 @@
         let questionsAttempted = 0;
 
         const quizData = [
-            { q: "I ________ (not / like) spicy food; it upsets my stomach.", a: ["do not like", "don't like"], exp: "Present Indefinite is used for permanent personal preferences." },
-            { q: "She ________ (practice) the piano all afternoon before the evening concert.", a: ["had been practicing"], exp: "Past Perfect Continuous shows an action ongoing for a period before a past event." },
-            { q: "This time tomorrow, I ________ (fly) to London for my business trip.", a: ["will be flying"], exp: "Future Continuous is used for planned actions in progress at a specific future time." },
-            { q: "When ________ (the last train / leave) the station?", a: ["did the last train leave"], exp: "Past Indefinite is used to ask questions about completed past events." },
-            { q: "She usually ________ (go) to the gym in the morning before work.", a: ["goes"], exp: "Present Indefinite is used for habits and routines." },
-            { q: "________ (they / leave) the office by the time we get there?", a: ["will they have left"], exp: "Future Perfect asks if an action will be completed before another future action." },
-            { q: "I was exhausted last night because I ________ (run) for ten miles.", a: ["had been running"], exp: "Past Perfect Continuous provides the ongoing cause for a past state/feeling." },
-            { q: "Please be quiet, the baby ________ (sleep) in the next room.", a: ["is sleeping"], exp: "Present Continuous describes an action happening at the very moment of speaking." },
-            { q: "I ________ (cook) dinner when the telephone suddenly rang.", a: ["was cooking"], exp: "Past Continuous describes the longer background action interrupted by a shorter action." },
-            { q: "The mechanic ________ (finish) fixing the car by 5 PM today.", a: ["will have finished"], exp: "Future Perfect is used because the action will be completely done before the deadline." },
-            { q: "They ________ (wait) for us at the station when our train arrives.", a: ["will be waiting"], exp: "Future Continuous describes an action that will already be in progress when another event happens." },
-            { q: "She ________ (visit) Paris three times in her life.", a: ["has visited"], exp: "Present Perfect is used for life experiences when the exact time is not mentioned." },
-            { q: "How long ________ (you / wait) when the stadium doors finally open?", a: ["will you have been waiting"], exp: "Future Perfect Continuous asks about accumulated duration leading right up to a future event." },
-            { q: "They ________ (not / pay) attention when the professor explained the formula.", a: ["were not paying", "weren't paying"], exp: "Past Continuous shows an action that was actively not happening during another past event." },
-            { q: "By the time we arrived at the cinema, the movie ________ (start).", a: ["had started"], exp: "Past Perfect is used for the older of two past actions." },
-            { q: "We ________ (never / eat) authentic Japanese sushi before today.", a: ["have never eaten"], exp: "Present Perfect is used for experiences from the past up to the present moment." },
-            { q: "We ________ (visit) our grandparents in the countryside last weekend.", a: ["visited"], exp: "Past Indefinite is used because the action was completed at a specific stated time." },
-            { q: "By next year, I ________ (work) at this company for exactly five years.", a: ["will have been working"], exp: "Future Perfect Continuous emphasizes continuous duration leading up to a point in the future." },
-            { q: "I ________ (read) a fascinating science fiction book these days.", a: ["am reading"], exp: "Present Continuous can be used for temporary actions happening around the current period." },
-            { q: "Don't worry, I ________ (help) you carry those heavy bags.", a: ["will help"], exp: "Future Indefinite is used to make a spontaneous decision or offer." },
-            { q: "After he ________ (finish) painting the room, he went straight to bed.", a: ["had finished"], exp: "Past Perfect emphasizes the first action was completely done before the second happened." },
-            { q: "Please don't call at 9 PM; I ________ (have) dinner with my family.", a: ["will be having"], exp: "Future Continuous describes an ongoing action that shouldn't be interrupted." },
-            { q: "Right now, he is reading a book, but yesterday he ________ (watch) a documentary.", a: ["watched"], exp: "Past Indefinite contrasts a present ongoing action with a simple completed action from the past." },
-            { q: "They ________ (not / attend) the annual board meeting next week.", a: ["will not attend", "won't attend"], exp: "Future Indefinite states a factual plan or prediction about a singular future event." },
-            { q: "________ (the package / arrive) in the mail yet?", a: ["has the package arrived"], exp: "Present Perfect is often used with 'yet' to ask if an expected action has happened up to now." }
+            { q: "I think it ________ (rain) tomorrow based on those dark clouds.", a: ["will rain"], exp: "Future Indefinite ('will rain') is used for predictions about the future." },
+            { q: "What ________ (you / do) at 8 PM last night?", a: ["were you doing"], exp: "Past Continuous is used to ask about an action in progress at a precise time in the past." },
+            { q: "I ________ (already / finish) my homework, so I can go out now.", a: ["have already finished"], exp: "Present Perfect with 'already' shows an action completed recently." },
+            { q: "She ________ (study) English for three years by the time she graduates.", a: ["will have been studying"], exp: "Future Perfect Continuous describes an ongoing action continuing up to a future point." },
+            { q: "While we ________ (walk) in the park, it started to pour.", a: ["were walking"], exp: "Past Continuous sets the background scene for a longer ongoing action." },
+            { q: "Water ________ (boil) at 100 degrees Celsius.", a: ["boils"], exp: "Present Indefinite (Simple Present) is used for scientific facts." },
+            { q: "How long ________ (you / live) in that apartment before you moved out?", a: ["had you been living"], exp: "Past Perfect Continuous focuses on the duration of an ongoing action before another completed past action." },
+            { q: "How long ________ (you / learn) Spanish?", a: ["have you been learning"], exp: "Present Perfect Continuous asks about the duration of an action still continuing now." },
+            { q: "By next month, I ________ (save) enough money for a summer vacation.", a: ["will have saved"], exp: "Future Perfect is used for actions fully completed before a specific future deadline." },
+            { q: "I ________ (not / see) you at the graduation party on Friday.", a: ["did not see", "didn't see"], exp: "Past Indefinite is used for completed actions that happened at a specific, finished time." },
+            { q: "What ________ (she / do) at this exact time next year?", a: ["will she be doing"], exp: "Future Continuous describes an action in progress at a specific future time." },
+            { q: "The sun ________ (rise) in the east and sets in the west.", a: ["rises"], exp: "Present Indefinite (Simple Present) is used for universal laws." },
+            { q: "She realized she ________ (forget) her house keys on the kitchen counter.", a: ["had forgotten"], exp: "Past Perfect is used when one past action happened before another past action." },
+            { q: "They ________ (not / watch) TV at the moment; they are studying.", a: ["are not watching", "aren't watching"], exp: "Present Continuous is used for actions happening right now." },
+            { q: "I ________ (know) my best friend since we were in kindergarten.", a: ["have known"], exp: "Present Perfect is used because 'know' is a stative verb." },
+            { q: "I ________ (never / see) such a beautiful beach before I went to Hawaii.", a: ["had never seen"], exp: "Past Perfect emphasizes the experience did not happen before a specific past event." },
+            { q: "By 8 PM tonight, we ________ (drive) for six hours straight.", a: ["will have been driving"], exp: "Future Perfect Continuous emphasizes duration leading up to a specific future time." },
+            { q: "He ________ (buy) a brand-new car just yesterday.", a: ["bought"], exp: "Past Indefinite is used for single, completed past actions." },
+            { q: "________ (you / call) me as soon as you land?", a: ["will you call"], exp: "Future Indefinite is used to make promises or requests." },
+            { q: "It ________ (rain) since 8 AM, and the streets are flooded.", a: ["has been raining"], exp: "Present Perfect Continuous describes an action that started in the past and is still visibly happening." },
+            { q: "They ________ (work) on this massive project all week.", a: ["have been working"], exp: "Present Perfect Continuous is perfect for actions happening over a recent period up to now." },
+            { q: "We ________ (not / complete) the renovations by the deadline.", a: ["will not have completed", "won't have completed"], exp: "Future Perfect is used for an action that will not be finished before a future deadline." },
+            { q: "Look! The kids ________ (play) football in the garden right now.", a: ["are playing"], exp: "Present Continuous is used for actions happening exactly at the time of speaking." },
+            { q: "They ________ (wait) for over an hour before the bus finally arrived.", a: ["had been waiting"], exp: "Past Perfect Continuous highlights the length of time an action was ongoing before another past action." },
+            { q: "If you need a ride tomorrow morning, I ________ (be) there for you.", a: ["will be"], exp: "Future Indefinite is used for an offer of help." }
         ];
 
         const container = document.getElementById('questionsContainer');
