@@ -32,11 +32,16 @@
             align-items: center;
             justify-content: center;
             gap: 15px;
-            margin-bottom: 10px;
+            margin-bottom: 15px;
             flex-wrap: wrap;
         }
         .logo-container img {
             height: 90px;
+        }
+        .title-group {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
         }
         header h1 {
             margin: 0;
@@ -44,8 +49,16 @@
             letter-spacing: 1px;
             text-transform: uppercase;
         }
+        header h2 {
+            margin: 5px 0 5px 0;
+            font-size: clamp(1.3rem, 4vw, 1.6rem);
+            color: #FF9933; /* Kesari Colour */
+            font-weight: 700;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+        }
         header p {
-            margin: 8px 0 0 0;
+            margin: 0;
             font-size: 1.1rem;
             color: #bbdefb;
         }
@@ -134,9 +147,12 @@
     <header>
         <div class="logo-container">
             <img src="verchas-logo.webp" alt="Verchas Academy Logo">
-            <h1>Verchas Academy</h1>
+            <div class="title-group">
+                <h1>Verchas Academy</h1>
+                <h2>Ayodhya</h2>
+                <p>Online Student Test Portal & Dashboard</p>
+            </div>
         </div>
-        <p>Online Student Test Portal & Dashboard</p>
     </header>
 
     <div class="container">
