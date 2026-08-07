@@ -27,22 +27,31 @@
             box-shadow: 0 4px 10px rgba(0,0,0,0.15);
             border-bottom: 5px solid var(--secondary);
         }
+        
+        /* The container that holds both Logo and Text Side-by-Side */
         .logo-container {
             display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 15px;
-            margin-bottom: 15px;
-            flex-wrap: wrap;
+            flex-direction: row; /* Puts items side by side (LHS and RHS) */
+            align-items: center; /* Centers them vertically */
+            justify-content: center; /* Centers the whole group on the screen */
+            gap: 20px; /* Space between logo and text */
+            margin-bottom: 10px;
+            flex-wrap: wrap; /* Keeps it mobile friendly */
         }
-        .logo-container img {
-            height: 90px;
+        
+         .logo-container img {
+            height: 145px; /* Increased 1.5x from 110px */
+            width: auto;
+            object-fit: contain;
         }
+        
+        /* The container holding the 3 lines of text */
         .title-group {
             display: flex;
             flex-direction: column;
-            align-items: center;
+            align-items: center; /* Center aligns the 3 lines with each other */
         }
+        
         header h1 {
             margin: 0;
             font-size: clamp(1.8rem, 5vw, 2.5rem); 
@@ -146,7 +155,10 @@
 
     <header>
         <div class="logo-container">
+            <!-- Logo on the Left Hand Side -->
             <img src="verchas-logo.webp" alt="Verchas Academy Logo">
+            
+            <!-- Text on the Right Hand Side, perfectly center-aligned with each other -->
             <div class="title-group">
                 <h1>Verchas Academy</h1>
                 <h2>Ayodhya</h2>
