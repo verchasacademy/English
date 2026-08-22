@@ -268,6 +268,8 @@
         <div class="submit-section">
             <button id="finalSubmitBtn" onclick="submitExamData()">Submit Exam & Show Final Score</button>
             <div id="finalResult"></div>
+            <!-- Add this new container -->
+            <div id="detailedReport" style="display: none; margin-top: 20px; text-align: left;"></div>
         </div>
     </div>
 
@@ -332,68 +334,22 @@
 
         const container = document.getElementById('questionsContainer');
         
-        // Render Questions
         quizData.forEach((item, index) => {
             const block = document.createElement('div');
             block.className = 'question-block';
-            
             const parts = item.q.split('________');
-            
             block.innerHTML = `
                 <div class="question-text">${index + 1}. ${parts[0]} <input type="text" id="q${index}" class="ans-input" autocomplete="off" placeholder="your answer"> ${parts[1]}</div>
-                <div class="action-row">
-                    <button class="check-btn" id="btn${index}" onclick="checkAnswer(${index})">Check Answer</button>
-                    <span class="feedback" id="feedback${index}"></span>
-                </div>
-                <div class="explanation" id="exp${index}">
-                    <strong>Explanation:</strong> ${item.exp}
-                </div>
             `;
             container.appendChild(block);
         });
 
-        // Check Answer Logic
-        function checkAnswer(index) {
-            const item = quizData[index];
-            const inputElement = document.getElementById(`q${index}`);
-            const feedbackElement = document.getElementById(`feedback${index}`);
-            const btnElement = document.getElementById(`btn${index}`);
-            const expElement = document.getElementById(`exp${index}`);
-            
-            const userAnswer = inputElement.value.trim().toLowerCase().replace(/\s+/g, ' ');
-            const isCorrect = item.a.some(ans => ans.toLowerCase() === userAnswer);
-
-            inputElement.disabled = true;
-            btnElement.disabled = true;
-            btnElement.textContent = "Checked";
-
-            // Track Stats
-            questionsAttempted++;
-            if (isCorrect) {
-                currentScore++;
-                inputElement.style.borderColor = "#2e7d32";
-                inputElement.style.backgroundColor = "#e8f5e9";
-                inputElement.style.color = "#1b5e20";
-                feedbackElement.textContent = "✔ Correct!";
-                feedbackElement.className = "feedback correct";
-            } else {
-                inputElement.style.borderColor = "#c62828";
-                inputElement.style.backgroundColor = "#ffebee";
-                inputElement.style.color = "#b71c1c";
-                feedbackElement.innerHTML = `✘ Incorrect. Correct answer: <strong>${item.a[0]}</strong>`;
-                feedbackElement.className = "feedback incorrect";
-            }
-
-            expElement.style.display = "block";
-        }
-
-        // Final Submit and Send to Google Sheets
         function submitExamData() {
             const name = document.getElementById('studentName').value.trim();
             const batch = document.getElementById('studentBatch').value;
             const mobile = document.getElementById('studentMobile').value.trim();
+            const totalQuestions = quizData.length;
 
-            // 1. Validation Checks
             if (!name || !batch || !mobile) {
                 alert("Please fill in your Name, Batch, and Mobile Number at the top of the page before submitting.");
                 return;
@@ -403,46 +359,96 @@
                 return;
             }
             
-            // Allow submission even if not complete, but warn them
-            if (questionsAttempted < 50) {
-                const wantToSubmit = confirm(`You have attempted only ${questionsAttempted} questions out of 50. Do you still want to submit?`);
-                if (!wantToSubmit) {
-                    return; 
+            currentScore = 0;
+            questionsAttempted = 0;
+            
+            quizData.forEach((item, index) => {
+                const inputElement = document.getElementById(`q${index}`);
+                const userAnswer = inputElement.value.trim().toLowerCase().replace(/\s+/g, ' ');
+                if (userAnswer !== "") {
+                    questionsAttempted++;
+                    if (item.a.some(ans => ans.toLowerCase() === userAnswer)) {
+                        currentScore++;
+                    }
                 }
+            });
+
+            if (questionsAttempted < totalQuestions) {
+                const wantToSubmit = confirm(`You have attempted only ${questionsAttempted} questions out of ${totalQuestions}. Do you still want to submit?`);
+                if (!wantToSubmit) { return; }
             }
 
-            // 2. Prepare Submit Button
+            // 1. Change the button state and forcefully apply CSS so it visually repaints
             const submitBtn = document.getElementById('finalSubmitBtn');
             submitBtn.textContent = "Submitting Data... Please Wait";
             submitBtn.disabled = true;
+            submitBtn.style.backgroundColor = "#9fa8da";
+            submitBtn.style.cursor = "not-allowed";
 
-            const scriptURL = 'https://script.google.com/macros/s/AKfycbxsOEpHG0OI4ktJfhFKEzqsKZNqLqXwuTlR-kMmtbBjCCsZVSMseNYVCBQSA222ANmt/exec';
-            
-            const formData = new FormData();
-            formData.append('Name', name);
-            formData.append('Batch', batch);
-            formData.append('Mobile', mobile);
-            formData.append('Score', currentScore + '/50');
+            // 2. Lock inputs
+            quizData.forEach((_, index) => {
+                document.getElementById(`q${index}`).disabled = true;
+            });
 
-            // 3. Send Data to Google Sheets
-            fetch(scriptURL, { method: 'POST', mode: 'no-cors', body: formData })
-                .then(() => {
-                    // Show Final Result
-                    document.getElementById('finalResult').innerHTML = `
-                        <h2>Exam Completed Successfully!</h2>
-                        <p>Name: ${name} | Batch: ${batch}</p>
-                        <p>Your Final Score:</p>
-                        <div class="score-display">${currentScore} / 50</div>
-                        <p><em>Your score has been submitted to Verchas Academy.</em></p>
-                    `;
-                    document.getElementById('finalResult').style.display = "block";
-                    submitBtn.style.display = "none";
-                })
-                .catch(error => {
-                    alert("An error occurred while saving your data. Please check your internet connection and try again.");
-                    submitBtn.textContent = "Submit Exam & Show Final Score";
-                    submitBtn.disabled = false;
-                });
+            // 3. Pause for 100 milliseconds to let the button visually change on screen before fetching
+            setTimeout(() => {
+                const scriptURL = 'https://script.google.com/macros/s/AKfycbxsOEpHG0OI4ktJfhFKEzqsKZNqLqXwuTlR-kMmtbBjCCsZVSMseNYVCBQSA222ANmt/exec';
+                const formData = new FormData();
+                formData.append('Name', name);
+                formData.append('Batch', batch);
+                formData.append('Mobile', mobile);
+                formData.append('Score', currentScore + '/' + totalQuestions);
+
+                fetch(scriptURL, { method: 'POST', mode: 'no-cors', body: formData })
+                    .then(() => {
+                        document.getElementById('finalResult').innerHTML = `
+                            <h2>Exam Completed Successfully!</h2>
+                            <p>Name: ${name} | Batch: ${batch}</p>
+                            <p>Your Final Score:</p>
+                            <div class="score-display">${currentScore} / ${totalQuestions}</div>
+                            <p><em>Your score has been submitted to Verchas Academy.</em></p>
+                            <button id="detailedAnalysisBtn" onclick="showDetailedAnalysis()" class="check-btn" style="margin-top: 15px;">Check Detailed Analysis</button>
+                        `;
+                        document.getElementById('finalResult').style.display = "block";
+                        submitBtn.style.display = "none";
+                    })
+                    .catch(error => {
+                        alert("An error occurred while saving your data.");
+                        // Re-enable everything if the connection fails
+                        submitBtn.textContent = "Submit Exam & Show Final Score";
+                        submitBtn.disabled = false;
+                        submitBtn.style.backgroundColor = "var(--primary)";
+                        submitBtn.style.cursor = "pointer";
+                        quizData.forEach((_, index) => {
+                            document.getElementById(`q${index}`).disabled = false;
+                        });
+                    });
+            }, 100); 
+        }
+
+        function showDetailedAnalysis() {
+            const reportContainer = document.getElementById('detailedReport');
+            let reportHTML = "<h3 style='text-align: center; color: var(--primary);'>Detailed Analysis</h3>";
+
+            quizData.forEach((item, index) => {
+                const inputElement = document.getElementById(`q${index}`);
+                const userAnswerCheck = inputElement.value.trim().toLowerCase().replace(/\s+/g, ' ');
+                const isCorrect = item.a.some(ans => ans.toLowerCase() === userAnswerCheck) && userAnswerCheck !== "";
+                
+                const status = isCorrect ? "<span class='correct'>✔ Correctly Answered</span>" : "<span class='incorrect'>✘ Wrong Answered</span>";
+                
+                reportHTML += `
+                    <div class="question-block" style="background-color: #ffffff;">
+                        <p style="font-size: 1.05rem;"><strong>Question ${index + 1}.</strong> ${item.q}</p>
+                        <p>${status}. <strong>Correct Answer:</strong> <span style="color: #0d47a1;">${item.a[0]}</span></p>
+                        <p><strong>Explanation:</strong> ${item.exp}</p>
+                    </div>
+                `;
+            });
+
+            reportContainer.innerHTML = reportHTML;
+            reportContainer.style.display = "block";
+            document.getElementById('detailedAnalysisBtn').style.display = "none";
         }
     </script>
 </body>
