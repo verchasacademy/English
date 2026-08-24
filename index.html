@@ -959,5 +959,35 @@
         // Start the engine
         autoScrollTicker();
     </script>
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        // Find all links that end in .pdf
+        const pdfLinks = document.querySelectorAll('a[href$=".pdf"]');
+        
+        pdfLinks.forEach(link => {
+            link.addEventListener('click', async function(e) {
+                e.preventDefault(); // Stop the link from opening immediately
+                const url = this.getAttribute('href');
+                
+                try {
+                    // Send a quick 'HEAD' request to see if the file exists without downloading it
+                    const response = await fetch(url, { method: 'HEAD' });
+                    
+                    if (response.ok) {
+                        // File exists, redirect the current window to the PDF
+                        // Note: We use window.location.href instead of window.open to avoid popup blockers
+                        window.location.href = url;
+                    } else {
+                        // File returned a 404 or other error
+                        alert("Coming Soon....");
+                    }
+                } catch (error) {
+                    // If the check fails completely (e.g., network error)
+                    alert("Coming Soon....");
+                }
+            });
+        });
+    });
+</script>
 </body>
 </html>
