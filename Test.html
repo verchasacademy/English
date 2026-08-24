@@ -106,6 +106,11 @@
             box-shadow: 0 4px 12px rgba(79, 70, 229, 0.4);
         }
 
+        /* Hide the ticker clones entirely on desktop layout */
+        .nav-btn.clone {
+            display: none;
+        }
+
         /* --- MAIN CONTENT AREA --- */
         .main-content {
             margin-left: 280px;
@@ -318,40 +323,69 @@
         @media (max-width: 768px) {
             body { flex-direction: column; }
             
-            /* Sidebar becomes horizontal swipeable top-nav */
             .sidebar { 
                 width: 100%; 
                 height: auto; 
                 position: relative; 
                 display: flex; 
                 flex-direction: column; 
+                overflow-x: hidden; 
             }
             .brand { 
                 padding: 1.5rem; 
                 border-bottom: 1px solid rgba(255,255,255,0.1); 
             }
             .brand img { 
-                height: 60px; /* Reduced for mobile */
+                height: 60px;
                 margin: 0;
             }
+
+            /* --- DRAGGABLE TICKER CONTAINER --- */
             .nav-menu { 
                 flex-direction: row; 
-                overflow-x: auto; 
-                padding: 10px; 
-                gap: 10px; 
-                -ms-overflow-style: none; /* Hide scrollbar IE/Edge */
-                scrollbar-width: none; /* Hide scrollbar Firefox */
+                width: 100%;
+                padding: 20px 10px; 
+                gap: 15px; 
+                overflow-x: auto; /* Enables native manual dragging! */
+                scroll-behavior: auto;
+                -ms-overflow-style: none; 
+                scrollbar-width: none; 
+                cursor: grab; /* Shows the grab hand icon */
             }
-            .nav-menu::-webkit-scrollbar { display: none; /* Hide scrollbar Chrome/Safari */ }
             
-            .nav-btn { 
+            .nav-menu:active {
+                cursor: grabbing; /* Fist icon when dragging */
+            }
+            
+            .nav-menu::-webkit-scrollbar {
+                display: none; 
+            }
+            
+            /* --- HIGHLIGHTED TICKER BUTTONS --- */
+            .nav-btn, .nav-btn.clone { 
+                display: flex; /* Ensure clones are visible on mobile */
                 flex: 0 0 auto; 
                 white-space: nowrap; 
                 justify-content: center; 
                 font-size: 0.95rem;
-                padding: 10px 15px;
+                padding: 10px 22px;
+                background: linear-gradient(135deg, rgba(79,70,229,0.8), rgba(67,56,202,0.9));
+                border: 1px solid #818CF8;
+                border-radius: 30px; 
+                color: #ffffff;
+                box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+                text-transform: uppercase;
+                letter-spacing: 0.5px;
+                user-select: none; /* Prevents ugly text highlighting when dragging */
+            }
+
+            .nav-btn.active {
+                background: linear-gradient(135deg, var(--secondary), #EA580C);
+                border-color: #FDBA74;
+                box-shadow: 0 4px 15px rgba(249, 115, 22, 0.6);
             }
             
+            /* Rest of mobile styles */
             .main-content { 
                 margin-left: 0; 
                 max-width: 100%; 
@@ -365,7 +399,6 @@
             }
             .header-banner h2 { font-size: 1.6rem; }
 
-            /* Fix Dropdowns to full width & expand downwards (Accordion Style) */
             .action-row { 
                 flex-direction: column; 
                 gap: 15px; 
@@ -384,14 +417,14 @@
                 transform: none !important;
                 display: none; 
             }
-            .dropdown:hover .dropdown-content,
-            .dropdown:focus-within .dropdown-content {
+            
+            /* Using .open class for JavaScript toggle instead of :hover */
+            .dropdown.open .dropdown-content {
                 display: block; 
                 visibility: visible;
                 opacity: 1;
             }
 
-            /* Fix Nested Dropdowns (Sub-menu) */
             .sub-dropdown-content {
                 position: relative; 
                 left: 0;
@@ -406,8 +439,7 @@
                 background-color: #F8FAFC;
             }
             
-            .sub-dropdown:hover .sub-dropdown-content,
-            .sub-dropdown:focus-within .sub-dropdown-content {
+            .sub-dropdown.open .sub-dropdown-content {
                 display: block;
                 visibility: visible;
                 opacity: 1;
@@ -467,11 +499,8 @@
             </div>
 
             <h3 class="section-title"><i class="fa-solid fa-pen-to-square"></i> Mock Tests</h3>
-            
-            <!-- Both dropdowns are inside this single action-row -->
             <div class="action-row">
                 
-                <!-- Dropdown 1: Daily Practice Sets -->
                 <div class="dropdown">
                     <button class="dropdown-btn"><i class="fa-regular fa-calendar-check"></i> Daily Practice Sets <i class="fa-solid fa-chevron-down" style="font-size:0.8rem;"></i></button>
                     <div class="dropdown-content scrollable-menu">
@@ -488,7 +517,6 @@
                     </div>
                 </div>
 
-                <!-- Dropdown 2: Topic-wise Mega Tests -->
                 <div class="dropdown">
                     <button class="dropdown-btn"><i class="fa-solid fa-layer-group"></i> Topic-wise Mega Tests <i class="fa-solid fa-chevron-down" style="font-size:0.8rem;"></i></button>
                     <div class="dropdown-content">
@@ -543,11 +571,10 @@
                                 <a href="future6.html">Part - 6</a>
                             </div>
                         </div>
-
                     </div>
                 </div>
-            </div> <!-- 9th batch row ends here -->
-        </div> <!-- 9th batch section completely ends here -->
+            </div>
+        </div> 
 
         <!-- ================= 10TH BATCH ================= -->
         <div id="tenth" class="tab-section">
@@ -555,7 +582,6 @@
             <h3 class="section-title"><i class="fa-solid fa-file-pdf"></i> Chapter Notes</h3>
             <div class="action-row">
                 
-                <!-- Dropdown 1: First Flight -->
                 <div class="dropdown">
                     <button class="dropdown-btn"><i class="fa-solid fa-book-open"></i> First Flight <i class="fa-solid fa-chevron-down" style="font-size:0.8rem;"></i></button>
                     <div class="dropdown-content">
@@ -571,7 +597,6 @@
                     </div>
                 </div>
             
-                <!-- Dropdown 2: Footprints Without Feet -->
                 <div class="dropdown">
                     <button class="dropdown-btn"><i class="fa-solid fa-book-open"></i> Footprints Without Feet <i class="fa-solid fa-chevron-down" style="font-size:0.8rem;"></i></button>
                     <div class="dropdown-content">
@@ -806,8 +831,120 @@
             });
 
             document.getElementById(batchId).classList.add('active');
-            evt.currentTarget.classList.add('active');
+            
+            // Highlight ALL buttons that point to this batch (both original and cloned in the ticker)
+            document.querySelectorAll(`.nav-btn[onclick*="${batchId}"]`).forEach(btn => {
+                btn.classList.add('active');
+            });
         }
+
+        // ================= MOBILE DROPDOWN LOGIC =================
+        
+        // 1. Toggle dropdown when button is clicked
+        document.querySelectorAll('.dropdown-btn, .sub-dropdown-btn').forEach(button => {
+            button.addEventListener('click', function(event) {
+                if (window.innerWidth <= 768) {
+                    event.stopPropagation(); // Stop click from immediately hitting the document listener
+                    this.parentElement.classList.toggle('open');
+                }
+            });
+        });
+
+        // 2. Close dropdowns when clicking anywhere else on the screen
+        document.addEventListener('click', function(event) {
+            if (window.innerWidth <= 768) {
+                document.querySelectorAll('.dropdown.open, .sub-dropdown.open').forEach(menu => {
+                    menu.classList.remove('open');
+                });
+            }
+        });
+
+        // 3. Prevent clicking inside the actual dropdown content from closing it
+        document.querySelectorAll('.dropdown-content, .sub-dropdown-content').forEach(content => {
+            content.addEventListener('click', function(event) {
+                event.stopPropagation();
+            });
+        });
+
+        // ================= MOBILE TICKER LOGIC =================
+        
+        const navMenu = document.querySelector('.nav-menu');
+        
+        // 1. Safely clone items for infinite scroll (CSS hides the clones on desktop)
+        if (!navMenu.dataset.cloned) {
+            const items = Array.from(navMenu.children);
+            items.forEach(item => {
+                let clone = item.cloneNode(true);
+                clone.classList.add('clone'); // This class keeps desktop looking normal!
+                navMenu.appendChild(clone);
+            });
+            navMenu.dataset.cloned = "true";
+        }
+
+        let isDown = false;
+        let startX;
+        let scrollLeft;
+        let isInteracting = false; 
+        let currentScroll = 0;
+
+        // --- DRAG TO SCROLL (Mouse Controls) ---
+        navMenu.addEventListener('mousedown', (e) => {
+            isDown = true;
+            isInteracting = true;
+            navMenu.style.cursor = 'grabbing';
+            startX = e.pageX - navMenu.offsetLeft;
+            scrollLeft = navMenu.scrollLeft;
+        });
+        navMenu.addEventListener('mouseleave', () => {
+            isDown = false;
+            isInteracting = false;
+            navMenu.style.cursor = 'grab';
+        });
+        navMenu.addEventListener('mouseup', () => {
+            isDown = false;
+            isInteracting = false;
+            navMenu.style.cursor = 'grab';
+        });
+        navMenu.addEventListener('mousemove', (e) => {
+            if (!isDown) return;
+            e.preventDefault();
+            const x = e.pageX - navMenu.offsetLeft;
+            const walk = (x - startX) * 1.5; // Drag speed multiplier
+            navMenu.scrollLeft = scrollLeft - walk;
+            currentScroll = navMenu.scrollLeft; // Sync variables
+        });
+
+        // --- DRAG TO SCROLL (Touch Controls) ---
+        navMenu.addEventListener('touchstart', () => { 
+            isInteracting = true; // Pause auto-scroll immediately on touch
+        }, {passive: true});
+        
+        navMenu.addEventListener('touchend', () => {
+            // Wait just a moment after letting go before scrolling starts again
+            setTimeout(() => { isInteracting = false; }, 800); 
+        });
+
+        // --- SMOOTH AUTO-SCROLL LOOP ---
+        function autoScrollTicker() {
+            // Only auto-scroll if screen is small AND user isn't holding the menu
+            if (window.innerWidth <= 768 && !isInteracting) {
+                currentScroll += 0.8; // SPEED: Change this number (1 is fast, 0.5 is slow)
+                navMenu.scrollLeft = currentScroll;
+                
+                // Once it scrolls exactly halfway, snap back to the start invisibly
+                if (navMenu.scrollLeft >= navMenu.scrollWidth / 2) {
+                    currentScroll = 0;
+                    navMenu.scrollLeft = 0;
+                }
+            } else {
+                // If on desktop or being dragged, just keep track of where we are
+                currentScroll = navMenu.scrollLeft;
+            }
+            requestAnimationFrame(autoScrollTicker); 
+        }
+        
+        // Start the engine
+        autoScrollTicker();
     </script>
 </body>
 </html>
