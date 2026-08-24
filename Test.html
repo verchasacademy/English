@@ -1,0 +1,813 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Verchas Academy | Dashboard</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap');
+
+        :root {
+            --primary: #4F46E5; 
+            --primary-hover: #4338CA;
+            --secondary: #F97316; 
+            --bg-light: #F3F4F6;
+            --surface: #FFFFFF;
+            --text-dark: #111827;
+            --text-muted: #6B7280;
+            --sidebar-bg: #1E293B; 
+            --border: #E5E7EB;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-light);
+            color: var(--text-dark);
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* --- SIDEBAR NAVIGATION --- */
+        .sidebar {
+            width: 280px;
+            background-color: var(--sidebar-bg);
+            color: white;
+            display: flex;
+            flex-direction: column;
+            position: fixed;
+            height: 100vh;
+            overflow-y: auto;
+            transition: 0.3s;
+            z-index: 100;
+        }
+
+        .brand {
+            padding: 2rem 1.5rem;
+            text-align: center;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .brand img {
+            height: 90px;
+            margin-bottom: 15px;
+            object-fit: contain; 
+        }
+
+        .brand h1 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            letter-spacing: 1px;
+        }
+        
+        .brand h2 {
+            font-size: 1rem;
+            color: var(--secondary);
+            margin-top: 5px;
+        }
+
+        .nav-menu {
+            padding: 1.5rem 1rem;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .nav-btn {
+            background: transparent;
+            border: none;
+            color: #CBD5E1;
+            padding: 12px 20px;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            text-align: left;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .nav-btn:hover {
+            background: rgba(255,255,255,0.1);
+            color: white;
+        }
+
+        .nav-btn.active {
+            background: var(--primary);
+            color: white;
+            box-shadow: 0 4px 12px rgba(79, 70, 229, 0.4);
+        }
+
+        /* --- MAIN CONTENT AREA --- */
+        .main-content {
+            margin-left: 280px;
+            flex: 1;
+            padding: 2rem 3rem;
+            max-width: calc(100% - 280px);
+        }
+
+        .header-banner {
+            background: linear-gradient(135deg, var(--primary), #818CF8);
+            border-radius: 16px;
+            padding: 2rem;
+            color: white;
+            margin-bottom: 2rem;
+            box-shadow: 0 10px 25px rgba(79, 70, 229, 0.2);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .header-banner h2 {
+            font-size: 2rem;
+            margin-bottom: 8px;
+        }
+
+        /* Tabs Logic */
+        .tab-section {
+            display: none;
+            animation: fadeIn 0.4s ease-out;
+        }
+        .tab-section.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .section-title {
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: var(--text-dark);
+            margin: 2.5rem 0 1.5rem 0;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .section-title i {
+            color: var(--primary);
+        }
+
+        /* --- DROPDOWN MENUS --- */
+        .action-row {
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+            margin-bottom: 2rem;
+        }
+
+        .dropdown {
+            position: relative;
+            display: inline-block;
+        }
+
+        .dropdown-btn {
+            background-color: var(--surface);
+            color: var(--primary);
+            border: 2px solid var(--primary);
+            padding: 14px 28px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            border-radius: 12px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+        }
+
+        .dropdown:hover .dropdown-btn {
+            background-color: var(--primary);
+            color: white;
+            box-shadow: 0 8px 15px rgba(79, 70, 229, 0.2);
+        }
+
+        .dropdown-content {
+            visibility: hidden;
+            opacity: 0;
+            position: absolute;
+            top: 100%;
+            left: 0;
+            background-color: white;
+            min-width: 280px;
+            box-shadow: 0 15px 30px rgba(0,0,0,0.15);
+            border-radius: 12px;
+            z-index: 10;
+            margin-top: 10px;
+            transform: translateY(10px);
+            transition: all 0.3s ease;
+            border: 1px solid var(--border);
+            padding: 8px 0;
+        }
+
+        .dropdown:hover .dropdown-content {
+            visibility: visible;
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .dropdown-content a {
+            color: var(--text-dark);
+            padding: 12px 20px;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 0.95rem;
+            transition: all 0.2s;
+        }
+
+        .dropdown-content a:hover {
+            background-color: #EEF2FF;
+            color: var(--primary);
+            padding-left: 26px; 
+            font-weight: 600;
+        }
+
+        /* --- NESTED SUB-DROPDOWN LOGIC --- */
+        .sub-dropdown {
+            position: relative;
+            width: 100%;
+        }
+
+        .sub-dropdown-btn {
+            width: 100%;
+            text-align: left;
+            background: none;
+            border: none;
+            color: var(--text-dark);
+            padding: 12px 20px;
+            font-family: inherit;
+            font-size: 0.95rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .sub-dropdown-btn:hover {
+            background-color: #EEF2FF;
+            color: var(--primary);
+            padding-left: 26px;
+            font-weight: 600;
+        }
+
+        .sub-dropdown-content {
+            visibility: hidden;
+            opacity: 0;
+            position: absolute;
+            top: 0;
+            left: 100%;
+            background-color: white;
+            min-width: 200px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+            border-radius: 12px;
+            border: 1px solid var(--border);
+            z-index: 20;
+            transform: translateX(-10px);
+            transition: all 0.3s ease;
+            padding: 8px 0;
+        }
+
+        .sub-dropdown:hover .sub-dropdown-content {
+            visibility: visible;
+            opacity: 1;
+            transform: translateX(0);
+        }
+
+        .scrollable-menu {
+            max-height: 350px;
+            overflow-y: auto;
+            overflow-x: hidden;
+        }
+        .scrollable-menu::-webkit-scrollbar { width: 6px; }
+        .scrollable-menu::-webkit-scrollbar-track { background: transparent; }
+        .scrollable-menu::-webkit-scrollbar-thumb { background: #CBD5E1; border-radius: 10px; }
+
+        /* --- COMING SOON --- */
+        .coming-soon-wrapper {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 50vh;
+            text-align: center;
+            background: var(--surface);
+            border-radius: 16px;
+            border: 1px dashed var(--border);
+        }
+        .coming-soon-wrapper i { font-size: 4rem; color: #93C5FD; margin-bottom: 20px; }
+        .coming-soon-wrapper h2 { font-size: 2rem; color: var(--text-dark); margin-bottom: 10px; }
+        .coming-soon-wrapper p { color: var(--text-muted); font-size: 1.1rem; }
+
+
+        /* ================= MOBILE RESPONSIVENESS ================= */
+        @media (max-width: 768px) {
+            body { flex-direction: column; }
+            
+            /* Sidebar becomes horizontal swipeable top-nav */
+            .sidebar { 
+                width: 100%; 
+                height: auto; 
+                position: relative; 
+                display: flex; 
+                flex-direction: column; 
+            }
+            .brand { 
+                padding: 1.5rem; 
+                border-bottom: 1px solid rgba(255,255,255,0.1); 
+            }
+            .brand img { 
+                height: 60px; /* Reduced for mobile */
+                margin: 0;
+            }
+            .nav-menu { 
+                flex-direction: row; 
+                overflow-x: auto; 
+                padding: 10px; 
+                gap: 10px; 
+                -ms-overflow-style: none; /* Hide scrollbar IE/Edge */
+                scrollbar-width: none; /* Hide scrollbar Firefox */
+            }
+            .nav-menu::-webkit-scrollbar { display: none; /* Hide scrollbar Chrome/Safari */ }
+            
+            .nav-btn { 
+                flex: 0 0 auto; 
+                white-space: nowrap; 
+                justify-content: center; 
+                font-size: 0.95rem;
+                padding: 10px 15px;
+            }
+            
+            .main-content { 
+                margin-left: 0; 
+                max-width: 100%; 
+                padding: 1rem; 
+            }
+            .header-banner { 
+                flex-direction: column; 
+                text-align: center; 
+                gap: 15px; 
+                padding: 1.5rem; 
+            }
+            .header-banner h2 { font-size: 1.6rem; }
+
+            /* Fix Dropdowns to full width & expand downwards (Accordion Style) */
+            .action-row { 
+                flex-direction: column; 
+                gap: 15px; 
+            }
+            .dropdown { width: 100%; }
+            .dropdown-btn { 
+                width: 100%; 
+                justify-content: space-between; 
+            }
+
+            .dropdown-content {
+                position: static; 
+                width: 100%;
+                box-shadow: none;
+                border: 1px solid var(--border);
+                transform: none !important;
+                display: none; 
+            }
+            .dropdown:hover .dropdown-content,
+            .dropdown:focus-within .dropdown-content {
+                display: block; 
+                visibility: visible;
+                opacity: 1;
+            }
+
+            /* Fix Nested Dropdowns (Sub-menu) */
+            .sub-dropdown-content {
+                position: relative; 
+                left: 0;
+                width: 100%;
+                box-shadow: none;
+                border: none;
+                border-left: 4px solid var(--primary); 
+                border-radius: 0;
+                transform: none !important;
+                display: none;
+                padding-left: 10px;
+                background-color: #F8FAFC;
+            }
+            
+            .sub-dropdown:hover .sub-dropdown-content,
+            .sub-dropdown:focus-within .sub-dropdown-content {
+                display: block;
+                visibility: visible;
+                opacity: 1;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
+        <div class="brand">
+            <img src="verchas-logo.webp" alt="Logo">
+            <h1>Verchas Academy</h1>
+            <h2>Ayodhya</h2>
+        </div>
+        <nav class="nav-menu">
+            <button class="nav-btn active" onclick="switchTab(event, 'ninth')"><i class="fa-solid fa-graduation-cap"></i> 9th Batch</button>
+            <button class="nav-btn" onclick="switchTab(event, 'tenth')"><i class="fa-solid fa-graduation-cap"></i> 10th Batch</button>
+            <button class="nav-btn" onclick="switchTab(event, 'eleventh')"><i class="fa-solid fa-book"></i> 11th Batch</button>
+            <button class="nav-btn" onclick="switchTab(event, 'twelfth')"><i class="fa-solid fa-book"></i> 12th Batch</button>
+            <button class="nav-btn" onclick="switchTab(event, 'neet')"><i class="fa-solid fa-stethoscope"></i> NEET</button>
+            <button class="nav-btn" onclick="switchTab(event, 'bsc')"><i class="fa-solid fa-user-nurse"></i> BSc Nursing</button>
+            <button class="nav-btn" onclick="switchTab(event, 'jee')"><i class="fa-solid fa-rocket"></i> IIT-JEE</button>
+        </nav>
+    </aside>
+
+    <!-- MAIN CONTENT -->
+    <main class="main-content">
+        
+        <div class="header-banner">
+            <div>
+                <h2>Welcome to your Dashboard</h2>
+                <p>Select your batch to access notes and mock tests.</p>
+            </div>
+            <i class="fa-solid fa-laptop-file fa-3x" style="opacity: 0.8;"></i>
+        </div>
+
+        <!-- ================= 9TH BATCH ================= -->
+        <div id="ninth" class="tab-section active">
+            
+            <h3 class="section-title"><i class="fa-solid fa-file-pdf"></i> Chapter Notes</h3>
+            <div class="action-row">
+                <div class="dropdown">
+                    <button class="dropdown-btn"><i class="fa-solid fa-book-open"></i> Kaveri <i class="fa-solid fa-chevron-down" style="font-size:0.8rem;"></i></button>
+                    <div class="dropdown-content">
+                        <a href="Class_9.1.pdf" target="_blank"><i class="fa-regular fa-file-pdf" style="color: #EF4444;"></i> 1. How I Taught....</a>
+                        <a href="Class_9.2.pdf" target="_blank"><i class="fa-regular fa-file-pdf" style="color: #EF4444;"></i> 2. The Pot Maker</a>
+                        <a href="Class_9.3.pdf" target="_blank"><i class="fa-regular fa-file-pdf" style="color: #EF4444;"></i> 3. Winds of Change</a>
+                        <a href="Class_9.4.pdf" target="_blank"><i class="fa-regular fa-file-pdf" style="color: #EF4444;"></i> 4. Vitamin-M</a>
+                        <a href="Class_9.5.pdf" target="_blank"><i class="fa-regular fa-file-pdf" style="color: #EF4444;"></i> 5. The World of Limitless....</a>
+                        <a href="Class_9.6.pdf" target="_blank"><i class="fa-regular fa-file-pdf" style="color: #EF4444;"></i> 6. Twin Melodies</a>
+                        <a href="Class_9.7.pdf" target="_blank"><i class="fa-regular fa-file-pdf" style="color: #EF4444;"></i> 7. Carrier of Words</a>
+                        <a href="Class_9.8.pdf" target="_blank"><i class="fa-regular fa-file-pdf" style="color: #EF4444;"></i> 8. Follow That Dream</a>
+                    </div>
+                </div>
+            </div>
+
+            <h3 class="section-title"><i class="fa-solid fa-pen-to-square"></i> Mock Tests</h3>
+            
+            <!-- Both dropdowns are inside this single action-row -->
+            <div class="action-row">
+                
+                <!-- Dropdown 1: Daily Practice Sets -->
+                <div class="dropdown">
+                    <button class="dropdown-btn"><i class="fa-regular fa-calendar-check"></i> Daily Practice Sets <i class="fa-solid fa-chevron-down" style="font-size:0.8rem;"></i></button>
+                    <div class="dropdown-content scrollable-menu">
+                        <a href="02.08.26.html"><i class="fa-solid fa-pen-clip" style="color: #10B981;"></i> Practice Set: 02 Aug 26</a>
+                        <a href="03.08.26.html"><i class="fa-solid fa-pen-clip" style="color: #10B981;"></i> Practice Set: 03 Aug 26</a>
+                        <a href="04.08.26.html"><i class="fa-solid fa-pen-clip" style="color: #10B981;"></i> Practice Set: 04 Aug 26</a>
+                        <a href="05.08.26.html"><i class="fa-solid fa-pen-clip" style="color: #10B981;"></i> Practice Set: 05 Aug 26</a>
+                        <a href="06.08.26.html"><i class="fa-solid fa-pen-clip" style="color: #10B981;"></i> Practice Set: 06 Aug 26</a>
+                        <a href="07.08.26.html"><i class="fa-solid fa-pen-clip" style="color: #10B981;"></i> Practice Set: 07 Aug 26</a>
+                        <a href="08.08.26.html"><i class="fa-solid fa-pen-clip" style="color: #10B981;"></i> Practice Set: 08 Aug 26</a>
+                        <a href="09.08.26.html"><i class="fa-solid fa-pen-clip" style="color: #10B981;"></i> Practice Set: 09 Aug 26</a>
+                        <a href="10.08.26.html"><i class="fa-solid fa-pen-clip" style="color: #10B981;"></i> Practice Set: 10 Aug 26</a>
+                        <a href="11.08.26.html"><i class="fa-solid fa-pen-clip" style="color: #10B981;"></i> Practice Set: 11 Aug 26</a>
+                    </div>
+                </div>
+
+                <!-- Dropdown 2: Topic-wise Mega Tests -->
+                <div class="dropdown">
+                    <button class="dropdown-btn"><i class="fa-solid fa-layer-group"></i> Topic-wise Mega Tests <i class="fa-solid fa-chevron-down" style="font-size:0.8rem;"></i></button>
+                    <div class="dropdown-content">
+                        
+                        <div class="sub-dropdown">
+                            <button class="sub-dropdown-btn">
+                                <span style="display:flex; align-items:center; gap:12px;">
+                                    <i class="fa-solid fa-bullseye" style="color: var(--secondary);"></i> Present Tenses
+                                </span> 
+                                <i class="fa-solid fa-chevron-right" style="font-size:0.7rem; color: #CBD5E1;"></i>
+                            </button>
+                            <div class="sub-dropdown-content">
+                                <a href="present1.html">Part - 1</a>
+                                <a href="present2.html">Part - 2</a>
+                                <a href="present3.html">Part - 3</a>
+                                <a href="present4.html">Part - 4</a>
+                                <a href="present5.html">Part - 5</a>
+                                <a href="present6.html">Part - 6</a>
+                            </div>
+                        </div>
+
+                        <div class="sub-dropdown">
+                            <button class="sub-dropdown-btn">
+                                <span style="display:flex; align-items:center; gap:12px;">
+                                    <i class="fa-solid fa-hourglass-half" style="color: var(--secondary);"></i> Past Tenses
+                                </span> 
+                                <i class="fa-solid fa-chevron-right" style="font-size:0.7rem; color: #CBD5E1;"></i>
+                            </button>
+                            <div class="sub-dropdown-content">
+                                <a href="past1.html">Part - 1</a>
+                                <a href="past2.html">Part - 2</a>
+                                <a href="past3.html">Part - 3</a>
+                                <a href="past4.html">Part - 4</a>
+                                <a href="past5.html">Part - 5</a>
+                                <a href="past6.html">Part - 6</a>
+                            </div>
+                        </div>
+
+                        <div class="sub-dropdown">
+                            <button class="sub-dropdown-btn">
+                                <span style="display:flex; align-items:center; gap:12px;">
+                                    <i class="fa-solid fa-rocket" style="color: var(--secondary);"></i> Future Tenses
+                                </span> 
+                                <i class="fa-solid fa-chevron-right" style="font-size:0.7rem; color: #CBD5E1;"></i>
+                            </button>
+                            <div class="sub-dropdown-content">
+                                <a href="future1.html">Part - 1</a>
+                                <a href="future2.html">Part - 2</a>
+                                <a href="future3.html">Part - 3</a>
+                                <a href="future4.html">Part - 4</a>
+                                <a href="future5.html">Part - 5</a>
+                                <a href="future6.html">Part - 6</a>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div> <!-- 9th batch row ends here -->
+        </div> <!-- 9th batch section completely ends here -->
+
+        <!-- ================= 10TH BATCH ================= -->
+        <div id="tenth" class="tab-section">
+            
+            <h3 class="section-title"><i class="fa-solid fa-file-pdf"></i> Chapter Notes</h3>
+            <div class="action-row">
+                
+                <!-- Dropdown 1: First Flight -->
+                <div class="dropdown">
+                    <button class="dropdown-btn"><i class="fa-solid fa-book-open"></i> First Flight <i class="fa-solid fa-chevron-down" style="font-size:0.8rem;"></i></button>
+                    <div class="dropdown-content">
+                        <a href="Class_10.1.1.pdf" target="_blank"><i class="fa-regular fa-file-pdf" style="color: #EF4444;"></i> 1. A Letter to God</a>
+                        <a href="Class_10.1.2.pdf" target="_blank"><i class="fa-regular fa-file-pdf" style="color: #EF4444;"></i> 2. Nelson Mandela...</a>
+                        <a href="Class_10.1.3.pdf" target="_blank"><i class="fa-regular fa-file-pdf" style="color: #EF4444;"></i> 3. Two Stories...</a>
+                        <a href="Class_10.1.4.pdf" target="_blank"><i class="fa-regular fa-file-pdf" style="color: #EF4444;"></i> 4. From the Diary...</a>
+                        <a href="Class_10.1.5.pdf" target="_blank"><i class="fa-regular fa-file-pdf" style="color: #EF4444;"></i> 5. Glimpses of India</a>
+                        <a href="Class_10.1.6.pdf" target="_blank"><i class="fa-regular fa-file-pdf" style="color: #EF4444;"></i> 6. Mijbil the Otter</a>
+                        <a href="Class_10.1.7.pdf" target="_blank"><i class="fa-regular fa-file-pdf" style="color: #EF4444;"></i> 7. Madam Rides the Bus</a>
+                        <a href="Class_10.1.8.pdf" target="_blank"><i class="fa-regular fa-file-pdf" style="color: #EF4444;"></i> 8. The Sermon at Benares</a>
+                        <a href="Class_10.1.9.pdf" target="_blank"><i class="fa-regular fa-file-pdf" style="color: #EF4444;"></i> 9. The Proposal</a>
+                    </div>
+                </div>
+            
+                <!-- Dropdown 2: Footprints Without Feet -->
+                <div class="dropdown">
+                    <button class="dropdown-btn"><i class="fa-solid fa-book-open"></i> Footprints Without Feet <i class="fa-solid fa-chevron-down" style="font-size:0.8rem;"></i></button>
+                    <div class="dropdown-content">
+                        <a href="Class_10.2.1.pdf" target="_blank"><i class="fa-regular fa-file-pdf" style="color: #EF4444;"></i> 1. A Triumph of Surgery</a>
+                        <a href="Class_10.2.2.pdf" target="_blank"><i class="fa-regular fa-file-pdf" style="color: #EF4444;"></i> 2. The Thief's Story</a>
+                        <a href="Class_10.2.3.pdf" target="_blank"><i class="fa-regular fa-file-pdf" style="color: #EF4444;"></i> 3. The Midnight Visitor</a>
+                        <a href="Class_10.2.4.pdf" target="_blank"><i class="fa-regular fa-file-pdf" style="color: #EF4444;"></i> 4. A Question of Trust</a>
+                        <a href="Class_10.2.5.pdf" target="_blank"><i class="fa-regular fa-file-pdf" style="color: #EF4444;"></i> 5. Footprints without Feet</a>
+                        <a href="Class_10.2.6.pdf" target="_blank"><i class="fa-regular fa-file-pdf" style="color: #EF4444;"></i> 6. The Making of a Scientist</a>
+                        <a href="Class_10.2.7.pdf" target="_blank"><i class="fa-regular fa-file-pdf" style="color: #EF4444;"></i> 7. The Necklace</a>
+                        <a href="Class_10.2.8.pdf" target="_blank"><i class="fa-regular fa-file-pdf" style="color: #EF4444;"></i> 8. Bholi</a>
+                        <a href="Class_10.1.9.pdf" target="_blank"><i class="fa-regular fa-file-pdf" style="color: #EF4444;"></i> 9. The Book That...</a>
+                    </div>
+                </div>
+            </div>
+
+            <h3 class="section-title"><i class="fa-solid fa-pen-to-square"></i> Mock Tests</h3>
+            <div class="action-row">
+                <div class="dropdown">
+                    <button class="dropdown-btn"><i class="fa-regular fa-calendar-check"></i> Daily Practice Sets <i class="fa-solid fa-chevron-down" style="font-size:0.8rem;"></i></button>
+                    <div class="dropdown-content scrollable-menu">
+                        <a href="02.08.26.html"><i class="fa-solid fa-pen-clip" style="color: #10B981;"></i> Practice Set: 02 Aug 26</a>
+                        <a href="03.08.26.html"><i class="fa-solid fa-pen-clip" style="color: #10B981;"></i> Practice Set: 03 Aug 26</a>
+                        <a href="04.08.26.html"><i class="fa-solid fa-pen-clip" style="color: #10B981;"></i> Practice Set: 04 Aug 26</a>
+                        <a href="05.08.26.html"><i class="fa-solid fa-pen-clip" style="color: #10B981;"></i> Practice Set: 05 Aug 26</a>
+                        <a href="06.08.26.html"><i class="fa-solid fa-pen-clip" style="color: #10B981;"></i> Practice Set: 06 Aug 26</a>
+                        <a href="07.08.26.html"><i class="fa-solid fa-pen-clip" style="color: #10B981;"></i> Practice Set: 07 Aug 26</a>
+                        <a href="08.08.26.html"><i class="fa-solid fa-pen-clip" style="color: #10B981;"></i> Practice Set: 08 Aug 26</a>
+                        <a href="09.08.26.html"><i class="fa-solid fa-pen-clip" style="color: #10B981;"></i> Practice Set: 09 Aug 26</a>
+                        <a href="10.08.26.html"><i class="fa-solid fa-pen-clip" style="color: #10B981;"></i> Practice Set: 10 Aug 26</a>
+                        <a href="11.08.26.html"><i class="fa-solid fa-pen-clip" style="color: #10B981;"></i> Practice Set: 11 Aug 26</a>
+                    </div>
+                </div>
+
+                <div class="dropdown">
+                    <button class="dropdown-btn"><i class="fa-solid fa-layer-group"></i> Topic-wise Mega Tests <i class="fa-solid fa-chevron-down" style="font-size:0.8rem;"></i></button>
+                    <div class="dropdown-content">
+                        
+                        <div class="sub-dropdown">
+                            <button class="sub-dropdown-btn">
+                                <span style="display:flex; align-items:center; gap:12px;">
+                                    <i class="fa-solid fa-bullseye" style="color: var(--secondary);"></i> Present Tenses
+                                </span> 
+                                <i class="fa-solid fa-chevron-right" style="font-size:0.7rem; color: #CBD5E1;"></i>
+                            </button>
+                            <div class="sub-dropdown-content">
+                                <a href="present1.html">Part - 1</a>
+                                <a href="present2.html">Part - 2</a>
+                                <a href="present3.html">Part - 3</a>
+                                <a href="present4.html">Part - 4</a>
+                                <a href="present5.html">Part - 5</a>
+                                <a href="present6.html">Part - 6</a>
+                            </div>
+                        </div>
+
+                        <div class="sub-dropdown">
+                            <button class="sub-dropdown-btn">
+                                <span style="display:flex; align-items:center; gap:12px;">
+                                    <i class="fa-solid fa-hourglass-half" style="color: var(--secondary);"></i> Past Tenses
+                                </span> 
+                                <i class="fa-solid fa-chevron-right" style="font-size:0.7rem; color: #CBD5E1;"></i>
+                            </button>
+                            <div class="sub-dropdown-content">
+                                <a href="past1.html">Part - 1</a>
+                                <a href="past2.html">Part - 2</a>
+                                <a href="past3.html">Part - 3</a>
+                                <a href="past4.html">Part - 4</a>
+                                <a href="past5.html">Part - 5</a>
+                                <a href="past6.html">Part - 6</a>
+                            </div>
+                        </div>
+
+                        <div class="sub-dropdown">
+                            <button class="sub-dropdown-btn">
+                                <span style="display:flex; align-items:center; gap:12px;">
+                                    <i class="fa-solid fa-rocket" style="color: var(--secondary);"></i> Future Tenses
+                                </span> 
+                                <i class="fa-solid fa-chevron-right" style="font-size:0.7rem; color: #CBD5E1;"></i>
+                            </button>
+                            <div class="sub-dropdown-content">
+                                <a href="future1.html">Part - 1</a>
+                                <a href="future2.html">Part - 2</a>
+                                <a href="future3.html">Part - 3</a>
+                                <a href="future4.html">Part - 4</a>
+                                <a href="future5.html">Part - 5</a>
+                                <a href="future6.html">Part - 6</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ================= BSC NURSING ================= -->
+        <div id="bsc" class="tab-section">
+            
+            <h3 class="section-title"><i class="fa-solid fa-file-pdf"></i> Chapter Notes</h3>
+            <div class="action-row">
+                <div class="dropdown">
+                    <button class="dropdown-btn"><i class="fa-solid fa-book-open"></i> Biology Notes <i class="fa-solid fa-chevron-down" style="font-size:0.8rem;"></i></button>
+                    <div class="dropdown-content">
+                        <a href="#"><i class="fa-regular fa-file-pdf" style="color: #EF4444;"></i> Chapter 1: Human Anatomy</a>
+                        <a href="#"><i class="fa-regular fa-file-pdf" style="color: #EF4444;"></i> Chapter 2: Cell Biology</a>
+                        <a href="#"><i class="fa-regular fa-file-pdf" style="color: #EF4444;"></i> Chapter 3: Physiology</a>
+                    </div>
+                </div>
+            </div>
+
+            <h3 class="section-title"><i class="fa-solid fa-pen-to-square"></i> Mock Tests</h3>
+            <div class="action-row">
+                
+                <div class="dropdown">
+                    <button class="dropdown-btn"><i class="fa-regular fa-calendar-check"></i> Daily Practice Sets <i class="fa-solid fa-chevron-down" style="font-size:0.8rem;"></i></button>
+                    <div class="dropdown-content scrollable-menu">
+                        <a href="02.08.26.html"><i class="fa-solid fa-pen-clip" style="color: #10B981;"></i> Practice Set: 02 Aug 26</a>
+                        <a href="03.08.26.html"><i class="fa-solid fa-pen-clip" style="color: #10B981;"></i> Practice Set: 03 Aug 26</a>
+                        <a href="04.08.26.html"><i class="fa-solid fa-pen-clip" style="color: #10B981;"></i> Practice Set: 04 Aug 26</a>
+                        <a href="05.08.26.html"><i class="fa-solid fa-pen-clip" style="color: #10B981;"></i> Practice Set: 05 Aug 26</a>
+                        <a href="06.08.26.html"><i class="fa-solid fa-pen-clip" style="color: #10B981;"></i> Practice Set: 06 Aug 26</a>
+                        <a href="07.08.26.html"><i class="fa-solid fa-pen-clip" style="color: #10B981;"></i> Practice Set: 07 Aug 26</a>
+                        <a href="08.08.26.html"><i class="fa-solid fa-pen-clip" style="color: #10B981;"></i> Practice Set: 08 Aug 26</a>
+                        <a href="09.08.26.html"><i class="fa-solid fa-pen-clip" style="color: #10B981;"></i> Practice Set: 09 Aug 26</a>
+                        <a href="10.08.26.html"><i class="fa-solid fa-pen-clip" style="color: #10B981;"></i> Practice Set: 10 Aug 26</a>
+                        <a href="11.08.26.html"><i class="fa-solid fa-pen-clip" style="color: #10B981;"></i> Practice Set: 11 Aug 26</a>
+                    </div>
+                </div>
+
+                <div class="dropdown">
+                    <button class="dropdown-btn"><i class="fa-solid fa-layer-group"></i> Topic-wise Mega Tests <i class="fa-solid fa-chevron-down" style="font-size:0.8rem;"></i></button>
+                    <div class="dropdown-content">
+                        
+                        <div class="sub-dropdown">
+                            <button class="sub-dropdown-btn">
+                                <span style="display:flex; align-items:center; gap:12px;">
+                                    <i class="fa-solid fa-bullseye" style="color: var(--secondary);"></i> Present Tenses
+                                </span> 
+                                <i class="fa-solid fa-chevron-right" style="font-size:0.7rem; color: #CBD5E1;"></i>
+                            </button>
+                            <div class="sub-dropdown-content">
+                                <a href="present1.html">Part - 1</a>
+                                <a href="present2.html">Part - 2</a>
+                                <a href="present3.html">Part - 3</a>
+                                <a href="present4.html">Part - 4</a>
+                                <a href="present5.html">Part - 5</a>
+                                <a href="present6.html">Part - 6</a>
+                            </div>
+                        </div>
+
+                        <div class="sub-dropdown">
+                            <button class="sub-dropdown-btn">
+                                <span style="display:flex; align-items:center; gap:12px;">
+                                    <i class="fa-solid fa-hourglass-half" style="color: var(--secondary);"></i> Past Tenses
+                                </span> 
+                                <i class="fa-solid fa-chevron-right" style="font-size:0.7rem; color: #CBD5E1;"></i>
+                            </button>
+                            <div class="sub-dropdown-content">
+                                <a href="past1.html">Part - 1</a>
+                                <a href="past2.html">Part - 2</a>
+                                <a href="past3.html">Part - 3</a>
+                                <a href="past4.html">Part - 4</a>
+                                <a href="past5.html">Part - 5</a>
+                                <a href="past6.html">Part - 6</a>
+                            </div>
+                        </div>
+
+                        <div class="sub-dropdown">
+                            <button class="sub-dropdown-btn">
+                                <span style="display:flex; align-items:center; gap:12px;">
+                                    <i class="fa-solid fa-rocket" style="color: var(--secondary);"></i> Future Tenses
+                                </span> 
+                                <i class="fa-solid fa-chevron-right" style="font-size:0.7rem; color: #CBD5E1;"></i>
+                            </button>
+                            <div class="sub-dropdown-content">
+                                <a href="future1.html">Part - 1</a>
+                                <a href="future2.html">Part - 2</a>
+                                <a href="future3.html">Part - 3</a>
+                                <a href="future4.html">Part - 4</a>
+                                <a href="future5.html">Part - 5</a>
+                                <a href="future6.html">Part - 6</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ================= COMING SOON PANELS ================= -->
+        <div id="eleventh" class="tab-section">
+            <div class="coming-soon-wrapper">
+                <i class="fa-solid fa-hourglass-half"></i>
+                <h2>11th Batch Material</h2>
+                <p>We are preparing top-tier study notes and tests. Coming very soon!</p>
+            </div>
+        </div>
+
+        <div id="twelfth" class="tab-section">
+            <div class="coming-soon-wrapper">
+                <i class="fa-solid fa-hourglass-half"></i>
+                <h2>12th Batch Material</h2>
+                <p>We are preparing top-tier study notes and tests. Coming very soon!</p>
+            </div>
+        </div>
+
+        <div id="neet" class="tab-section">
+            <div class="coming-soon-wrapper">
+                <i class="fa-solid fa-user-doctor"></i>
+                <h2>NEET Preparation Hub</h2>
+                <p>Medical mock tests and biology modules are being assembled.</p>
+            </div>
+        </div>
+
+        <div id="jee" class="tab-section">
+            <div class="coming-soon-wrapper">
+                <i class="fa-solid fa-microchip"></i>
+                <h2>IIT-JEE Portal</h2>
+                <p>Advanced mechanics and mathematics modules are on the way.</p>
+            </div>
+        </div>
+
+    </main>
+
+    <script>
+        function switchTab(evt, batchId) {
+            const sections = document.querySelectorAll('.tab-section');
+            sections.forEach(section => {
+                section.classList.remove('active');
+            });
+
+            const buttons = document.querySelectorAll('.nav-btn');
+            buttons.forEach(btn => {
+                btn.classList.remove('active');
+            });
+
+            document.getElementById(batchId).classList.add('active');
+            evt.currentTarget.classList.add('active');
+        }
+    </script>
+</body>
+</html>
